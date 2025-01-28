@@ -3,6 +3,7 @@
 services:
   portainer:
     image: portainer/portainer-ce:latest
+    container_name: my_portainer
     ports:
       - "9000:9000"
       - "8000:8000"
@@ -12,7 +13,7 @@ services:
     restart: always
   plex:
     image: lscr.io/linuxserver/plex:latest
-    container_name: plex
+    container_name: my_plex
     network_mode: host
     environment:
       - PUID=1000
@@ -27,17 +28,19 @@ services:
     restart: unless-stopped
   db:
     image: mariadb:10.6
+    container_name: my_nextcloud_db
     restart: always
     command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
     volumes:
       - db:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=
-      - MYSQL_PASSWORD=
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_PASSWORD=password
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
   app:
     image: nextcloud
+    container_name: my_nextcloud
     restart: always
     ports:
       - 8080:80
